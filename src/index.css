@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base{
+  html {
+    @apply bg-red-400;
+  }
+}
+
+@layer components {
+  .btn-default {
+    @apply border border-neutral-900 bg-gradient-to-b to-gray-500 from-gray-300 py-5 px-6; 
+  }
+}
