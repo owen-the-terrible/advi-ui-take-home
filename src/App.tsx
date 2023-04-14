@@ -3,6 +3,7 @@ export default function App() {
   return (
     <div className="">
       <div className="text-xs sm:text-sm lg:text-lg">mobile</div>
+      <h1>test vercel stage</h1>
       <VerificationCode />
     </div>
   )
