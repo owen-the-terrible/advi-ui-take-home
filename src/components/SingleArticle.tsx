@@ -7,7 +7,6 @@ const SingleArticle: FC = () =>{
     const {data} = useParams();
     const decodedData = data ? decodeURIComponent(data) : null;
     const newData = decodedData ? JSON.parse(decodedData) : null;
-    console.log(data)
 return(
     <div>
         {data?.toString()}

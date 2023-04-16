@@ -267,7 +267,6 @@ export const Articles: FC = () => {
       topFeeds[key] = value;
       //   footerTopFeeds[key] = value;
     });
-    console.log;
     setTopFeedState(topFeeds);
     setTopFooterFeedState(topFeeds);
 
@@ -284,7 +283,6 @@ export const Articles: FC = () => {
     }
     setFooterDisplayState(footerDisplay);
   };
-  console.log(topFooterFeedState, footerDisplayState);
   const assignGrouping = () => {
     const groupedAPIdata: sortedAPIdata = {};
     articles.forEach((obj: any) => {
@@ -298,10 +296,6 @@ export const Articles: FC = () => {
     setGroupedApiDataState(groupedAPIdata);
     return groupedAPIdata;
   };
-  //   console.log(groupedApiDataState)
-
-  //   assignGrouping();
-
   const encodedData = groupedApiDataState["Business Insider"]?.length
     ? encodeURIComponent(
         JSON.stringify(groupedApiDataState["Business Insider"][0])
@@ -321,10 +315,14 @@ export const Articles: FC = () => {
         }
 
         const data = await response.json();
+        if(data){
         setArticles(data.articles);
+        }else{
+            throw new Error("Error fetching articles");
+        }
         // assignGrouping();
-      } catch (error) {
-        console.log("Error: ", error);
+      } catch (error:any) {
+        throw new Error(error.message);
       }
     };
 
@@ -356,8 +354,9 @@ export const Articles: FC = () => {
             <a href="#" className="-m-1.5 p-1.5">
               <span className="sr-only">Your Company</span>
               <img
+                loading="lazy"
                 className="h-8 w-auto rounded"
-                src="../public/adviLogo.png"
+                src="/adviLogo.png"
                 alt=""
               />
             </a>
@@ -477,7 +476,8 @@ export const Articles: FC = () => {
           <>
             <div className="mt-32 sm:mt-40 xl:mx-auto xl:max-w-7xl xl:px-8">
               <img
-                src="../public/news.png"
+                loading="lazy"
+                src="/news.png"
                 alt="news background"
                 className="aspect-[9/4] w-full object-cover xl:rounded-3xl"
               />
@@ -508,8 +508,9 @@ export const Articles: FC = () => {
           <div className="xl:grid xl:grid-cols-3 xl:gap-8">
             <div className="space-y-8">
               <img
+                loading="lazy"
                 className="h-7 rounded"
-                src="./public/adviLogo.png"
+                src="/adviLogo.png"
                 alt="Company name"
               />
               <p className="text-sm leading-6 text-gray-300">
