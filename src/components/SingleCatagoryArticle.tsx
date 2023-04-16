@@ -9,15 +9,14 @@ type Props = {
 
 export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
   const [list, setList] = useState<APIdata[]>([]);
-  const [currentContent, setCurrentContent] = useState<number>(1)
-  const [starter, setStarter] = useState<APIdata | null>(null)
+  const [starter, setStarter] = useState<APIdata | null>(null);
+  const currentContent = 1;
   const encodedData = (data: APIdata): string =>{
     const newEncoded = encodeURIComponent(JSON.stringify(data));
     return newEncoded;
 } 
   const check = Object.entries(data).slice();
 
-  console.log("CHECK: ", list);
 
   useEffect(() => {
     if (check && check[placement]) {
@@ -38,12 +37,12 @@ export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
   return (
     <dl className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 text-base leading-7 text-gray-300 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:gap-x-16">
       {list.slice(0,16).map((value: APIdata, index: number) => {
-        console.log("value: ", value);
         if(placement === 0){
         return (
           <Link to={`/article/${encodedData(value)}`} key={value.description[0] + index} className="relative pl-9 cursor-pointer">
             <dt className="inline font-semibold text-white">
               <img
+                loading="lazy"
                 src={value.urlToImage ? value.urlToImage : ""}
                 alt="stock photo"
               />
@@ -61,6 +60,7 @@ export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
             <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
     <div className="mx-auto flex max-w-2xl flex-col gap-16 bg-white/5 px-6 py-16 ring-1 ring-white/10 sm:rounded-3xl sm:p-8 lg:mx-0 lg:max-w-none lg:flex-row lg:items-center lg:py-20 xl:gap-x-20 xl:px-20">
       <img
+        loading="lazy"
         className="h-96 w-full flex-none rounded-2xl object-cover shadow-xl lg:aspect-square lg:h-auto lg:max-w-sm"
         src={starter?.urlToImage ? starter.urlToImage : ""}
         alt="news photo"
