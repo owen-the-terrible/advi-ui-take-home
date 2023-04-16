@@ -8,6 +8,7 @@ const [articles, setArticles] = useState([]);
 const apiKey = '8523bd2a5fef471f8fed4a36a53f9a25'
 
   return (
+
     <BrowserRouter>
     <Routes>
       <Route path='/' element={<Articles />}>
@@ -18,10 +19,6 @@ const apiKey = '8523bd2a5fef471f8fed4a36a53f9a25'
 
     </Routes>
     </BrowserRouter>
-    
-    // <div className="">
-    //   <Articles apiKey={apiKey}/>
-    // </div>
   )
 }
 
