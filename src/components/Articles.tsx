@@ -23,6 +23,9 @@ import {
 } from "@heroicons/react/20/solid";
 import { Outlet, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import FooterDisplay from "./FooterDisplay";
+import SingleCatagoryArticle from "./SingleCatagoryArticle";
+import SingleArticle from "./SingleArticle";
 
 interface NavigationItem {
   name: string;
@@ -214,12 +217,12 @@ const footerNavigation = {
   ],
 };
 
-interface Source {
+export interface Source {
   source: string | null;
   name: string | null;
 }
 
-interface APIdata {
+export interface APIdata {
   author: string | null;
   content: string;
   description: string;
@@ -229,127 +232,81 @@ interface APIdata {
   url: string;
   urlToImage: string | null;
 }
-interface sortedAPIdata {
+export interface sortedAPIdata {
   [key: string]: APIdata[];
 }
-type sortedAPIdataType =  {
-  [key: string]: APIdata[]
-}
-
-
+export type sortedAPIdataType = {
+  [key: string]: APIdata[];
+};
+export type displayType = [string, APIdata[]][];
 export const Articles: FC = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [articles, setArticles] = useState([]);
+  const [groupedApiDataState, setGroupedApiDataState] = useState<sortedAPIdata>(
+    {}
+  );
+  const [topFeedState, setTopFeedState] = useState<sortedAPIdata>({});
+  const [topFooterFeedState, setTopFooterFeedState] = useState<sortedAPIdata>(
+    {}
+  );
+  const [footerDisplayState, setFooterDisplayState] = useState<sortedAPIdata>(
+    {}
+  );
+  //   const footerTopFeeds: sortedAPIdata = {};
+
+  //   const topFeedDisplay: displayType = Object.entries(topFeeds);
   const params = useParams();
-  const groupedAPIdata: sortedAPIdata = {};
-  const topFeeds: sortedAPIdata = {};
-  const footerTopFeeds: sortedAPIdata = {}
-  const footerDisplay: sortedAPIdata = {};
-  const topFeedSearch = (object: sortedAPIdataType): void => {
-    const arrays = Object.entries(object).filter(([_, value]) => Array.isArray(value))
-      const sortedArrays = arrays.sort((a, b) => b[1].length - a[1].length);
-      sortedArrays.slice(0, 4).forEach(([key, value]) => {
-          topFeeds[key] = value;
-          footerTopFeeds[key] = value;
-        })
-        assignFooterDisplayValues(groupedAPIdata);
+
+  const topFeedSearch = (object: sortedAPIdataType): sortedAPIdata => {
+    const topFeeds: sortedAPIdata = {};
+    const arrays = Object.entries(object).filter(([_, value]) =>
+      Array.isArray(value)
+    );
+    const sortedArrays = arrays.sort((a, b) => b[1].length - a[1].length);
+    sortedArrays.slice(0, 4).map(([key, value]) => {
+      topFeeds[key] = value;
+      //   footerTopFeeds[key] = value;
+    });
+    console.log;
+    setTopFeedState(topFeeds);
+    setTopFooterFeedState(topFeeds);
+
+    return topFeeds;
   };
-let footerPlace = 0;
-const FooterDisplay = () =>{
-    const topKey = Object.keys(footerTopFeeds)[0];
-    console.log("topKey: ",topKey)
-    console.log("TOPFEEEEEDS: ",topFeeds)
-    delete footerTopFeeds[topKey]
-    console.log("fDSP in function: ", footerDisplay)
-    const bottomDisplay = Object.entries(footerDisplay).slice(0,4);
-    console.log("bdsp 1",bottomDisplay)
-    
-    bottomDisplay.forEach((item: [key:string, value: APIdata[]])=>{
-        delete footerDisplay[item[0]];
-    })
-    console.log("bottomDiplay",bottomDisplay)
 
-    return (
-        <>
-        <h3 className="text-sm font-semibold leading-6 text-white">
-          {topKey}
-        </h3>
-        <ul role="list" className="mt-6 space-y-4">
-          {bottomDisplay.map((item: [key:string, value: APIdata[]], index:number) => (
-            <li key={item[0] + index}>
-              <a
-                href='#'
-                className="text-sm leading-6 text-gray-300 hover:text-white"
-              >
-                {item[0]}
-              </a>
-            </li>
-          ))}
-        </ul>
-        </>       
-    )
-}
-const assignFooterDisplayValues = (object: sortedAPIdataType): void =>{
-    for(const key in object){
-        const checkFeedPlacement = topFeeds[key];
-        if(checkFeedPlacement == undefined){
-            footerDisplay[key] = checkFeedPlacement;
-        }
-        console.log("footerDsp: ",  footerDisplay)
-    }
-}
-
-
-
-  console.log("Articles: ", articles);
-  console.log(
-    articles.sort((a: any, b: any) => {
-      if (a.source.name < b.source.name) {
-        return -1;
-      }
-      if (a.source.name > b.source.name) {
-        return 1;
-      }
-      return 0;
-    })
-  );
-  articles.sort((a: APIdata, b: APIdata) => {
-    if (a.source.name && b.source.name) {
-      if (a.source.name < b.source.name) {
-        return -1;
-      }
-      if (a.source.name > b.source.name) {
-        return 1;
+  const assignFooterDisplayValues = (object: sortedAPIdataType): void => {
+    const footerDisplay: sortedAPIdata = {};
+    for (const key in object) {
+      const checkFeedPlacement = topFeedState[key];
+      if (checkFeedPlacement == undefined) {
+        footerDisplay[key] = object[key];
       }
     }
-    return 0;
-  });
+    setFooterDisplayState(footerDisplay);
+  };
+  console.log(topFooterFeedState, footerDisplayState);
+  const assignGrouping = () => {
+    const groupedAPIdata: sortedAPIdata = {};
+    articles.forEach((obj: any) => {
+      const groupName = obj.source.name;
+      if (!groupedAPIdata[groupName]) {
+        groupedAPIdata[String(groupName)] = [];
+      }
+      groupedAPIdata[groupName].push(obj);
+    });
 
+    setGroupedApiDataState(groupedAPIdata);
+    return groupedAPIdata;
+  };
+  //   console.log(groupedApiDataState)
 
-  articles.forEach((obj: any) => {
-    const groupName = obj.source.name;
-    if (!groupedAPIdata[groupName]) {
-      groupedAPIdata[String(groupName)] = [];
-    }
-    groupedAPIdata[groupName].push(obj);
-  });
-  console.log("groupedAPIdata: ", groupedAPIdata);
-  console.log("topFeeds", topFeedSearch(groupedAPIdata));
+  //   assignGrouping();
 
-  const encodedData = groupedAPIdata["Business Insider"]?.length
-    ? encodeURIComponent(JSON.stringify(groupedAPIdata["Business Insider"][0]))
+  const encodedData = groupedApiDataState["Business Insider"]?.length
+    ? encodeURIComponent(
+        JSON.stringify(groupedApiDataState["Business Insider"][0])
+      )
     : encodeURIComponent(JSON.stringify({ name: "nothing" }));
-  console.log(
-    encodedData && groupedAPIdata["Business Insider"]?.length
-      ? JSON.parse(decodeURIComponent(encodedData))
-      : "derp"
-  );
-  console.log(
-    groupedAPIdata["Business Insider"]?.length
-      ? groupedAPIdata["Business Insider"]
-      : "nope"
-  );
-  console.log(groupedAPIdata["AppleInsider"]);
 
   useEffect(() => {
     const url =
@@ -365,6 +322,7 @@ const assignFooterDisplayValues = (object: sortedAPIdataType): void =>{
 
         const data = await response.json();
         setArticles(data.articles);
+        // assignGrouping();
       } catch (error) {
         console.log("Error: ", error);
       }
@@ -376,6 +334,15 @@ const assignFooterDisplayValues = (object: sortedAPIdataType): void =>{
       setArticles([]);
     };
   }, []);
+  useEffect(() => {
+    assignGrouping();
+  }, [articles]);
+  useEffect(() => {
+    topFeedSearch(groupedApiDataState);
+  }, [groupedApiDataState]);
+  useEffect(() => {
+    assignFooterDisplayValues(groupedApiDataState);
+  }, [topFeedState]);
 
   return (
     <div className="bg-gray-900">
@@ -390,7 +357,7 @@ const assignFooterDisplayValues = (object: sortedAPIdataType): void =>{
               <span className="sr-only">Your Company</span>
               <img
                 className="h-8 w-auto rounded"
-                src="../src/assets/adviLogo.png"
+                src="../public/adviLogo.png"
                 alt=""
               />
             </a>
@@ -506,168 +473,27 @@ const assignFooterDisplayValues = (object: sortedAPIdataType): void =>{
           </div>
         </div>
         <Outlet />
-
-        {/* Content section */}
-        {/* <div className="mx-auto mt-20 max-w-7xl px-6 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:mx-0 lg:max-w-none">
-            <div className="grid max-w-xl grid-cols-1 gap-8 text-base leading-7 text-gray-300 lg:max-w-none lg:grid-cols-2">
-              <div>
-                <p>
-                  Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris semper sed amet
-                  vitae sed turpis id. Id dolor praesent donec est. Odio penatibus risus viverra tellus varius sit neque
-                  erat velit. Faucibus commodo massa rhoncus, volutpat. Dignissim sed eget risus enim. Mattis mauris
-                  semper sed amet vitae sed turpis id.
-                </p>
-                <p className="mt-8">
-                  Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie
-                  auctor fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices
-                  hac adipiscing egestas.
-                </p>
-              </div>
-              <div>
-                <p>
-                  Erat pellentesque dictumst ligula porttitor risus eget et eget. Ultricies tellus felis id dignissim
-                  eget. Est augue maecenas risus nulla ultrices congue nunc tortor. Enim et nesciunt doloremque nesciunt
-                  voluptate.
-                </p>
-                <p className="mt-8">
-                  Et vitae blandit facilisi magna lacus commodo. Vitae sapien duis odio id et. Id blandit molestie
-                  auctor fermentum dignissim. Lacus diam tincidunt ac cursus in vel. Mauris varius vulputate et ultrices
-                  hac adipiscing egestas. Iaculis convallis ac tempor et ut. Ac lorem vel integer orci.
-                </p>
-              </div>
-            </div>
-            
-          </div>
-        </div> */}
-
-        {/* Image section */}
         {!params.data && (
-          <div className="mt-32 sm:mt-40 xl:mx-auto xl:max-w-7xl xl:px-8">
-            <img
-              src="../src/assets/news.png"
-              alt="news background"
-              className="aspect-[9/4] w-full object-cover xl:rounded-3xl"
-            />
-          </div>
-        )}
-
-        {/* Values section */}
-        <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-40 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:mx-0">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Our values
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-gray-300">
-              Lorem ipsum, dolor sit amet consectetur adipisicing elit. Maiores
-              impedit perferendis suscipit eaque, iste dolor cupiditate
-              blanditiis.
-            </p>
-          </div>
-          <dl className="mx-auto mt-16 grid max-w-2xl grid-cols-1 gap-8 text-base leading-7 text-gray-300 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:gap-x-16">
-            {/*(topFeeds.forEach((value:APIdata, index) => (
-              <div key={value.description[0] + index} className="relative pl-9">
-                <dt className="inline font-semibold text-white">
-                  
-                  <img src={value.urlToImage ? value.urlToImage : ""} alt="stock photo" />
-                </dt>{" "}
-                <dd className="inline">{value.description}</dd>
-              </div>
-            ))*/}
-          </dl>
-        </div>
-
-        {/* Team section */}
-        <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-40 lg:px-8">
-          <div className="mx-auto max-w-2xl lg:mx-0">
-            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-              Our team
-            </h2>
-            <p className="mt-6 text-lg leading-8 text-gray-300">
-              Excepturi repudiandae alias ut. Totam aut facilis. Praesentium in
-              neque vel omnis. Eos error odio. Qui fugit voluptatibus eum culpa.
-            </p>
-          </div>
-          <ul
-            role="list"
-            className="mx-auto mt-20 grid max-w-2xl grid-cols-1 gap-x-8 gap-y-14 sm:grid-cols-2 lg:mx-0 lg:max-w-none lg:grid-cols-3 xl:grid-cols-4"
-          >
-            {team.map((person) => (
-              <li key={person.name}>
-                <img
-                  className="aspect-[14/13] w-full rounded-2xl object-cover"
-                  src={person.imageUrl}
-                  alt=""
-                />
-                <h3 className="mt-6 text-lg font-semibold leading-8 tracking-tight text-white">
-                  {person.name}
-                </h3>
-                <p className="text-base leading-7 text-gray-300">
-                  {person.role}
-                </p>
-                <p className="text-sm leading-6 text-gray-500">
-                  {person.location}
-                </p>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {/* CTA section */}
-        <div className="relative isolate -z-10 mt-32 sm:mt-40">
-          <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div className="mx-auto flex max-w-2xl flex-col gap-16 bg-white/5 px-6 py-16 ring-1 ring-white/10 sm:rounded-3xl sm:p-8 lg:mx-0 lg:max-w-none lg:flex-row lg:items-center lg:py-20 xl:gap-x-20 xl:px-20">
+          <>
+            <div className="mt-32 sm:mt-40 xl:mx-auto xl:max-w-7xl xl:px-8">
               <img
-                className="h-96 w-full flex-none rounded-2xl object-cover shadow-xl lg:aspect-square lg:h-auto lg:max-w-sm"
-                src="https://images.unsplash.com/photo-1519338381761-c7523edc1f46?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=800&q=80"
-                alt=""
+                src="../public/news.png"
+                alt="news background"
+                className="aspect-[9/4] w-full object-cover xl:rounded-3xl"
               />
-              <div className="w-full flex-auto">
-                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-                  Join our team
-                </h2>
-                <p className="mt-6 text-lg leading-8 text-gray-300">
-                  Lorem ipsum dolor sit amet consect adipisicing elit. Possimus
-                  magnam voluptatum cupiditate veritatis in accusamus quisquam.
-                </p>
-                <ul
-                  role="list"
-                  className="mt-10 grid grid-cols-1 gap-x-8 gap-y-3 text-base leading-7 text-white sm:grid-cols-2"
-                >
-                  {benefits.map((benefit) => (
-                    <li key={benefit} className="flex gap-x-3">
-                      <CheckCircleIcon
-                        className="h-7 w-5 flex-none"
-                        aria-hidden="true"
-                      />
-                      {benefit}
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-10 flex">
-                  <a
-                    href="#"
-                    className="text-sm font-semibold leading-6 text-indigo-400"
-                  >
-                    See our job postings <span aria-hidden="true">&rarr;</span>
-                  </a>
-                </div>
-              </div>
             </div>
-          </div>
-          <div
-            className="absolute inset-x-0 -top-16 -z-10 flex transform-gpu justify-center overflow-hidden blur-3xl"
-            aria-hidden="true"
-          >
-            <div
-              className="aspect-[1318/752] w-[82.375rem] flex-none bg-gradient-to-r from-[#80caff] to-[#4f46e5] opacity-25"
-              style={{
-                clipPath:
-                  "polygon(73.6% 51.7%, 91.7% 11.8%, 100% 46.4%, 97.4% 82.2%, 92.5% 84.9%, 75.7% 64%, 55.3% 47.5%, 46.5% 49.4%, 45% 62.9%, 50.3% 87.2%, 21.3% 64.1%, 0.1% 100%, 5.4% 51.1%, 21.4% 63.9%, 58.9% 0.2%, 73.6% 51.7%)",
-              }}
-            />
-          </div>
-        </div>
+
+            <div className="mx-auto mt-32 max-w-7xl px-6 sm:mt-40 lg:px-8">
+              <div className="mx-auto max-w-2xl lg:mx-0">
+                <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+                  Top News
+                </h2>
+              </div>
+              <SingleCatagoryArticle placement={0} data={topFeedState} />
+            </div>
+            <SingleCatagoryArticle placement={2} data={topFeedState} />
+          </>
+        )}
       </main>
 
       {/* Footer */}
@@ -683,7 +509,7 @@ const assignFooterDisplayValues = (object: sortedAPIdataType): void =>{
             <div className="space-y-8">
               <img
                 className="h-7 rounded"
-                src="../src/assets/adviLogo.png"
+                src="./public/adviLogo.png"
                 alt="Company name"
               />
               <p className="text-sm leading-6 text-gray-300">
@@ -691,29 +517,43 @@ const assignFooterDisplayValues = (object: sortedAPIdataType): void =>{
                 points in the readers experienece.
               </p>
               <div className="flex space-x-6">
-                {/* {footerNavigation.social.map((item: FooterNavigationItem) => (
-                  <a key={item.name} href={item.href} className="text-gray-500 hover:text-gray-400">
-                    <span className="sr-only">{item.name}</span>
-                    <item.icon className="h-6 w-6" aria-hidden="true" />
-                  </a>
-                ))} */}
               </div>
             </div>
             <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                    {FooterDisplay()}
+                  <FooterDisplay
+                    keyPlacement={0}
+                    bottomPlacement={4}
+                    topFooterFeedState={topFooterFeedState}
+                    footerDisplayState={footerDisplayState}
+                  />
                 </div>
                 <div className="mt-10 md:mt-0">
-                  {FooterDisplay()}
+                  <FooterDisplay
+                    keyPlacement={1}
+                    bottomPlacement={8}
+                    topFooterFeedState={topFooterFeedState}
+                    footerDisplayState={footerDisplayState}
+                  />
                 </div>
               </div>
               <div className="md:grid md:grid-cols-2 md:gap-8">
                 <div>
-                  {FooterDisplay()}
+                  <FooterDisplay
+                    keyPlacement={2}
+                    bottomPlacement={12}
+                    topFooterFeedState={topFooterFeedState}
+                    footerDisplayState={footerDisplayState}
+                  />
                 </div>
                 <div className="mt-10 md:mt-0">
-                  {FooterDisplay()}
+                  <FooterDisplay
+                    keyPlacement={3}
+                    bottomPlacement={16}
+                    topFooterFeedState={topFooterFeedState}
+                    footerDisplayState={footerDisplayState}
+                  />
                 </div>
               </div>
             </div>
