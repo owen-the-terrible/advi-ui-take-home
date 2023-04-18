@@ -25,8 +25,8 @@ import { Outlet, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import FooterDisplay from "./FooterDisplay";
 import SingleCatagoryArticle from "./SingleCatagoryArticle";
-import SingleArticle from "./SingleArticle";
-
+// import SingleArticle from "./SingleArticle";
+// import { fetchData } from ''
 interface NavigationItem {
   name: string;
   href: string;
@@ -50,20 +50,6 @@ interface TeamMember {
   location: string;
 }
 
-// interface FooterNavigationItem {
-//   name: string;
-//   href: string;
-//   icon?: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-// }
-
-// interface FooterNavigation {
-//   solutions: FooterNavigationItem[];
-//   support: FooterNavigationItem[];
-//   company: FooterNavigationItem[];
-//   legal: FooterNavigationItem[];
-//   social: FooterNavigationItem[];
-// }
-
 const navigation: NavigationItem[] = [
   { name: "Product", href: "#" },
   { name: "Features", href: "#" },
@@ -71,54 +57,6 @@ const navigation: NavigationItem[] = [
   { name: "Company", href: "#" },
 ];
 
-const values: Value[] = [
-  {
-    name: "Be world-class.",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit aute id magna.",
-    icon: SolidRocketLaunchIcon,
-  },
-  {
-    name: "Take responsibility.",
-    description:
-      "Anim aute id magna aliqua ad ad non deserunt sunt. Qui irure qui lorem cupidatat commodo.",
-    icon: SolidHandRaisedIcon,
-  },
-  {
-    name: "Be supportive.",
-    description:
-      "Ac tincidunt sapien vehicula erat auctor pellentesque rhoncus voluptas blanditiis et.",
-    icon: SolidUserGroupIcon,
-  },
-  {
-    name: "Always learning.",
-    description:
-      "Iure sed ab. Aperiam optio placeat dolor facere. Officiis pariatur eveniet atque et dolor.",
-    icon: SolidAcademicCapIcon,
-  },
-  {
-    name: "Share everything you know.",
-    description:
-      "Laudantium tempora sint ut consectetur ratione. Ut illum ut rem numquam fuga delectus.",
-    icon: SolidSparklesIcon,
-  },
-  {
-    name: "Enjoy downtime.",
-    description:
-      "Culpa dolorem voluptatem velit autem rerum qui et corrupti. Quibusdam quo placeat.",
-    icon: SolidSunIcon,
-  },
-];
-const team = [
-  {
-    name: "Leslie Alexander",
-    role: "Co-Founder / CEO",
-    imageUrl:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=8&w=1024&h=1024&q=80",
-    location: "Toronto, Canada",
-  },
-  // More people...
-];
 const benefits = [
   "Competitive salaries",
   "Flexible work hours",
@@ -252,11 +190,8 @@ export const Articles: FC = () => {
   const [footerDisplayState, setFooterDisplayState] = useState<sortedAPIdata>(
     {}
   );
-  //   const footerTopFeeds: sortedAPIdata = {};
-
-  //   const topFeedDisplay: displayType = Object.entries(topFeeds);
   const params = useParams();
-
+  
   const topFeedSearch = (object: sortedAPIdataType): sortedAPIdata => {
     const topFeeds: sortedAPIdata = {};
     const arrays = Object.entries(object).filter(([_, value]) =>
@@ -315,23 +250,22 @@ export const Articles: FC = () => {
         }
 
         const data = await response.json();
-        if(data){
-        setArticles(data.articles);
-        }else{
-            throw new Error("Error fetching articles");
+        console.log(data)
+        if (data) {
+          setArticles(data.articles);
+        } else {
+          throw new Error("Error fetching articles");
         }
-        // assignGrouping();
-      } catch (error:any) {
+      } catch (error: any) {
         throw new Error(error.message);
       }
     };
-
     fetchData();
 
     return () => {
       setArticles([]);
     };
-  }, []);
+  }, []); 
   useEffect(() => {
     assignGrouping();
   }, [articles]);
@@ -345,93 +279,7 @@ export const Articles: FC = () => {
   return (
     <div className="bg-gray-900">
       {/* Header */}
-      <header className="absolute inset-x-0 top-0 z-50">
-        <nav
-          className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
-          aria-label="Global"
-        >
-          <div className="flex lg:flex-1">
-            <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img
-                loading="lazy"
-                className="h-8 w-auto rounded"
-                src="/adviLogo.png"
-                alt=""
-              />
-            </a>
-          </div>
-          <div className="flex lg:hidden">
-            <button
-              type="button"
-              className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-400"
-              onClick={() => setMobileMenuOpen(true)}
-            >
-              <span className="sr-only">Open main menu</span>
-              <Bars3Icon className="h-6 w-6" aria-hidden="true" />
-            </button>
-          </div>
-          <div className="hidden lg:flex lg:gap-x-12">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                className="text-sm font-semibold leading-6 text-white"
-                to={`/article/${encodedData}`}
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" className="text-sm font-semibold leading-6 text-white">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
-        </nav>
-        <Dialog
-          as="div"
-          className="lg:hidden"
-          open={mobileMenuOpen}
-          onClose={setMobileMenuOpen}
-        >
-          <div className="fixed inset-0 z-50" />
-          <Dialog.Panel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-gray-900 px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-white/10">
-            <div className="flex items-center justify-between">
-              <button
-                type="button"
-                className="-m-2.5 rounded-md p-2.5 text-gray-400"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <span className="sr-only">Close menu</span>
-                <XMarkIcon className="h-6 w-6" aria-hidden="true" />
-              </button>
-            </div>
-            <div className="mt-6 flow-root">
-              <div className="-my-6 divide-y divide-gray-500/25">
-                <div className="space-y-2 py-6">
-                  {navigation.map((item) => (
-                    <a
-                      key={item.name}
-                      href={item.href}
-                      className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                    >
-                      {item.name}
-                    </a>
-                  ))}
-                </div>
-                <div className="py-6">
-                  <a
-                    href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                  >
-                    Log in
-                  </a>
-                </div>
-              </div>
-            </div>
-          </Dialog.Panel>
-        </Dialog>
-      </header>
+      
 
       <main className="relative isolate">
         {/* Background */}
@@ -449,30 +297,9 @@ export const Articles: FC = () => {
         </div>
 
         {/* Header section */}
-        <div className="px-6 pt-14 lg:px-8">
-          <div className="mx-auto max-w-2xl pt-24 text-center sm:pt-40">
-            {!params.data && (
-              <>
-                <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-                  Welcome to the Advi News API
-                </h2>
-                <p className="mt-6 text-lg leading-8 text-gray-300">
-                  Introducing the ultimate news searching app, Advi News App!
-                  With this app, you can easily search through a variety of
-                  existing news feeds to find the information you're looking
-                  for. Our app makes it easy to stay up-to-date on the latest
-                  happenings around the world. With just a few clicks, you'll be
-                  able to browse through a wealth of information from top news
-                  sources, all in one convenient place. Say goodbye to endless
-                  scrolling and searching - download our app today and start
-                  exploring the world of news!
-                </p>
-              </>
-            )}
-          </div>
-        </div>
-        <Outlet />
-        {!params.data && (
+        
+        {/* <Outlet />
+        {!params.data && ( */}
           <>
             <div className="mt-32 sm:mt-40 xl:mx-auto xl:max-w-7xl xl:px-8">
               <img
@@ -493,11 +320,10 @@ export const Articles: FC = () => {
             </div>
             <SingleCatagoryArticle placement={2} data={topFeedState} />
           </>
-        )}
       </main>
 
       {/* Footer */}
-      <footer
+      {/* <footer
         className="relative mt-32 sm:mt-40"
         aria-labelledby="footer-heading"
       >
@@ -517,8 +343,7 @@ export const Articles: FC = () => {
                 We deliver news article searching that eliminates friction
                 points in the readers experienece.
               </p>
-              <div className="flex space-x-6">
-              </div>
+              <div className="flex space-x-6"></div>
             </div>
             <div className="mt-16 grid grid-cols-2 gap-8 xl:col-span-2 xl:mt-0">
               <div className="md:grid md:grid-cols-2 md:gap-8">
@@ -565,7 +390,7 @@ export const Articles: FC = () => {
             </p>
           </div>
         </div>
-      </footer>
+      </footer> */}
     </div>
   );
 };

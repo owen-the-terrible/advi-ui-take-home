@@ -11,10 +11,6 @@ export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
   const [list, setList] = useState<APIdata[]>([]);
   const [starter, setStarter] = useState<APIdata | null>(null);
   const currentContent = 1;
-  const encodedData = (data: APIdata): string =>{
-    const newEncoded = encodeURIComponent(JSON.stringify(data));
-    return newEncoded;
-} 
   const check = Object.entries(data).slice();
 
 
@@ -22,15 +18,15 @@ export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
     if (check && check[placement]) {
       setList(check[placement][1]);
     }
-    return () => {
-      setList([]);
-    };
+    // return () => {
+    //   setList([]);
+    // };
   }, [check]);
   useEffect(()=>{
     setStarter(list[currentContent]);
-    return ()=>{
-        setStarter(null)
-    }
+    // return ()=>{
+    //     setStarter(null)
+    // }
   }, [list, currentContent])
   if(placement === 0){
 
@@ -39,7 +35,7 @@ export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
       {list.slice(0,16).map((value: APIdata, index: number) => {
         if(placement === 0){
         return (
-          <Link to={`/article/${encodedData(value)}`} key={value.description[0] + index} className="relative pl-9 cursor-pointer">
+          <Link to={`/article/${value.title}`} key={value.description[0] + index} className="relative pl-9 cursor-pointer">
             <dt className="inline font-semibold text-white">
               <img
                 loading="lazy"
@@ -81,7 +77,7 @@ export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
               <Link
                 className="h-7 w-5 flex-none"
                 aria-hidden="true"
-                to={`/article/${encodedData(value)}`}
+                to={`/article/${value.title}`}
               />
               {value.title.split(' ').slice(0,2).join(' ')}
             </li>
@@ -89,7 +85,7 @@ export const SingleCatagoryArticle: FC<Props> = ({ data, placement}) => {
         </ul>
         <div className="mt-10 flex">
           <Link
-            to={ starter ? `/article/${encodedData(starter)}` : '#'}
+            to={ starter ? `/article/${starter.title}` : '#'}
             className="text-sm font-semibold leading-6 text-indigo-400 cursor-pointer"
           >
             See this article <span aria-hidden="true">&rarr;</span>
