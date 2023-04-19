@@ -34,4 +34,4 @@ In this section you will have access to a feed of either all of the articles, or
 Purely an informational section, you will be able to have a larger view of the article that ws selected. You still have the option to choose a source to go back to through the Nav or the footer, or you may head back to view everything at once by clicking the "Back to Articles" directional link at the bottom.
 
 ## Not Found Modal
-This Modal will only pop up if whatever you're searching for is not found. Once this Modal pops up you may either click the Home button to go to the home section, or you may click go back which will send you to the "All Articles" section. Alo need be you can click the x in the top right corner.  
+This Modal will only pop up if whatever you're searching for is not found. Once this Modal pops up you may either click the Home button to go to the home section, or you may click go back which will send you to the "All Articles" section. Also need be you can click the x in the top right corner to just close the modal.  
