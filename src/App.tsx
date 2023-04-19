@@ -1,10 +1,9 @@
-import { useState, useEffect, useRef, SyntheticEvent } from 'react';
-import { BrowserRouter, Route, Routes, createBrowserRouter, RouterProvider } from 'react-router-dom'
-import Articles from "./components/Articles"
-import AllArticles from './components/AllArticles';
-import SingleArticle from './components/SingleArticle';
-import Root from './components/RootLayout';
-import ErrorPage from './components/ErrorPage';
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import SingleArticle from "./components/SingleArticle";
+import AllArticles from "./components/AllArticles";
+import ErrorPage from "./components/ErrorPage";
+import Articles from "./components/Articles";
+import Root from "./components/RootLayout";
 
 const router = createBrowserRouter([
   {
@@ -13,24 +12,21 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
     children: [
       {
-        path: '/',
-        element: <Articles />
-
+        path: "/",
+        element: <Articles />,
       },
       {
-        path: '/all/:data',
-        element: <AllArticles />
-
+        path: "/all/:data",
+        element: <AllArticles />,
       },
       {
-        path: '/article/:data',
-        element: <SingleArticle/>
-
+        path: "/article/:data",
+        element: <SingleArticle />,
       },
     ],
   },
 ]);
 
 export default function App() {
- return <RouterProvider router={router} /> 
+  return <RouterProvider router={router} />;
 }

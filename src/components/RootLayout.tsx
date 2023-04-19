@@ -1,32 +1,28 @@
 import { useState, useEffect, FC } from "react";
 import { Dialog } from "@headlessui/react";
-import {
-  Bars3Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { Outlet, useParams } from "react-router";
+import { Outlet } from "react-router";
 import { Link, useLocation } from "react-router-dom";
 import FooterDisplay from "./FooterDisplay";
 import { fetchData } from "../utils/API";
 
 interface NavigationItem {
   name: string;
-  href: string;
 }
 
 const navigation: NavigationItem[] = [
-  { name: "Business Insider", href: "#" },
-  { name: "Google News", href: "#" },
-  { name: "Gizmodo.com", href: "#" },
-  { name: "heise online", href: "#" },
+  { name: "Business Insider" },
+  { name: "Google News" },
+  { name: "Gizmodo.com" },
+  { name: "heise online" },
 ];
 
 export interface Source {
   source: string | null;
   name: string | null;
 }
-export interface PromiseAPI{
+export interface PromiseAPI {
   articles: APIdata[];
   status: string;
   totalResults: number;
@@ -48,9 +44,8 @@ export interface sortedAPIdata {
 export type sortedAPIdataType = {
   [key: string]: APIdata[];
 };
-export type displayType = [string, APIdata[]][];
 
-export const Root: FC = () => {
+const Root: FC = () => {
   const location = useLocation();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [articles, setArticles] = useState<APIdata[]>([]);
@@ -64,8 +59,6 @@ export const Root: FC = () => {
   const [footerDisplayState, setFooterDisplayState] = useState<sortedAPIdata>(
     {}
   );
-  const params = useParams();
-    console.log("location, params: ", location, params)
   const topFeedSearch = (object: sortedAPIdataType): sortedAPIdata => {
     const topFeeds: sortedAPIdata = {};
     const arrays = Object.entries(object).filter(([_, value]) =>
@@ -74,11 +67,9 @@ export const Root: FC = () => {
     const sortedArrays = arrays.sort((a, b) => b[1].length - a[1].length);
     sortedArrays.slice(0, 4).map(([key, value]) => {
       topFeeds[key] = value;
-      //   footerTopFeeds[key] = value;
     });
     setTopFeedState(topFeeds);
     setTopFooterFeedState(topFeeds);
-
     return topFeeds;
   };
 
@@ -111,23 +102,22 @@ export const Root: FC = () => {
       )
     : encodeURIComponent(JSON.stringify({ name: "nothing" }));
 
-
-    useEffect(() => {
-     (async () =>{
-        try{
-          const resData = await fetchData("https://newsapi.org/v2/everything?q=bitcoin&apiKey=8523bd2a5fef471f8fed4a36a53f9a25");
-          if (resData) {
-            setArticles(resData.articles);
-          }else{
-            throw new Error("Error in calling API");
-          }
-
-        }catch(error:any){
-          throw new Error(error.message)
-
+  useEffect(() => {
+    (async () => {
+      try {
+        const resData = await fetchData(
+          "https://newsapi.org/v2/everything?q=bitcoin&apiKey=8523bd2a5fef471f8fed4a36a53f9a25"
+        );
+        if (resData) {
+          setArticles(resData.articles);
+        } else {
+          throw new Error("Error in calling API");
         }
-      })();
-    },[]);
+      } catch (error: any) {
+        throw new Error(error.message);
+      }
+    })();
+  }, []);
   useEffect(() => {
     assignGrouping();
   }, [articles]);
@@ -178,11 +168,16 @@ export const Root: FC = () => {
               </Link>
             ))}
           </div>
-          <div className="hidden lg:flex lg:flex-1 lg:justify-end">
-            <a href="#" className="text-sm font-semibold leading-6 text-white">
-              Log in <span aria-hidden="true">&rarr;</span>
-            </a>
-          </div>
+          {location.pathname !== "/" && (
+            <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+              <Link
+                to="/"
+                className="text-sm font-semibold leading-6 text-white"
+              >
+                Home <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>
+          )}
         </nav>
         <Dialog
           as="div"
@@ -206,23 +201,25 @@ export const Root: FC = () => {
               <div className="-my-6 divide-y divide-gray-500/25">
                 <div className="space-y-2 py-6">
                   {navigation.map((item) => (
-                    <a
+                    <Link
+                      to={`/all/${item.name}`}
                       key={item.name}
-                      href={item.href}
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                     >
                       {item.name}
-                    </a>
+                    </Link>
                   ))}
                 </div>
-                <div className="py-6">
-                  <a
-                    href="#"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
-                  >
-                    Log in
-                  </a>
-                </div>
+                {location.pathname !== "/" && (
+                  <div className="py-6">
+                    <Link
+                      to="/"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-white hover:bg-gray-800"
+                    >
+                      Home
+                    </Link>
+                  </div>
+                )}
               </div>
             </div>
           </Dialog.Panel>
@@ -246,27 +243,26 @@ export const Root: FC = () => {
 
         {/* Header section */}
         <div className="px-6 pt-14 lg:px-8">
-          {/* save */}
-          <div className="mx-auto max-w-2xl pt-24 text-center sm:pt-40">
-            {location.pathname == "/" && (
+          {location.pathname == "/" && (
+            <div className="mx-auto max-w-2xl pt-24 text-center sm:pt-40">
               <>
                 <h2 className="text-4xl font-bold tracking-tight text-white sm:text-6xl">
-                  Welcome to the Advi Bitcoin News API
+                  Welcome to the Advi Bitcoin News APP
                 </h2>
                 <p className="mt-6 text-lg leading-8 text-gray-300">
-                  Introducing the ultimate news searching app, Advi News App!
-                  With this app, you can easily search through a variety of Bitcoin 
-                  news feeds to find the information you're looking
-                  for. Our app makes it easy to stay up-to-date on the latest
-                  happenings around the world in Bitcoin. With just a few clicks, you'll be
-                  able to browse through a wealth of information from top news
-                  sources, all in one convenient place. Say goodbye to endless
-                  scrolling and searching - download our app today and start
-                  exploring the world of news!
+                  Introducing the ultimate news searching app, Advi Bitcoin News
+                  App! With this app, you can easily search through a variety of
+                  Bitcoin news feeds to find the information you're looking for.
+                  Our app makes it easy to stay up-to-date on the latest
+                  happenings around the world in Bitcoin. With just a few
+                  clicks, you'll be able to browse through a wealth of
+                  information from top news sources, all in one convenient
+                  place. Say goodbye to endless scrolling and searching -
+                  download our app today and start exploring the world of news!
                 </p>
               </>
-            )}
-          </div>
+            </div>
+          )}
         </div>
         <Outlet />
       </main>
@@ -335,7 +331,7 @@ export const Root: FC = () => {
           </div>
           <div className="mt-16 border-t border-white/10 pt-8 sm:mt-20 lg:mt-24">
             <p className="text-xs leading-5 text-gray-400">
-              &copy; 2020 Your Company, Inc. All rights reserved.
+              &copy; 2023 Advi Bitcoin News APP, Inc. All rights reserved.
             </p>
           </div>
         </div>
