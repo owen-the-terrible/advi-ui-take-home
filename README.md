@@ -1,9 +1,6 @@
-![Logo](https://advinow.com/wp-content/uploads/2021/11/AdviNOW_Horizontal_Blk_2_lo-res.png)
+# Advi Bitcoin News App
 
-
-# UI Take Home Challenge
-
-First off, Congratulations for making it this far. Interviewing can be a painful processand we totally get that. Hopefully you find this challenge fairly light and can use it as a way to show off some creativity. Wishing you the best of luck and we look forward to talking with you again soon. If you have any questions or need any clarity then please reach out to us and we will work dilligently to get back to you. 
+Thank you for the opportunity to be able to put some skills of my skills on display, and giving me a chance at becoming a part of the AdviNOW team. This is a Frontend application designed to be ran locally for the time being per the free tier criteria of the gven API source. If membershi was purchase, this would work beautifully on my deployed site at, 
 
 A couple of things before you continue on in reading the instructions. 
 

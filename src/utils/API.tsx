@@ -1,4 +1,3 @@
-// "https://newsapi.org/v2/everything?q=bitcoin&apiKey=8523bd2a5fef471f8fed4a36a53f9a25";
 import { PromiseAPI } from "../components/RootLayout";
 
 export const fetchData = async (url: string): Promise<PromiseAPI> => {
