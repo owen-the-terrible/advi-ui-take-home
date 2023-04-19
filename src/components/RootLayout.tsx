@@ -16,6 +16,7 @@ const navigation: NavigationItem[] = [
   { name: "Google News" },
   { name: "Gizmodo.com" },
   { name: "heise online" },
+  { name: "everything" },
 ];
 
 export interface Source {
@@ -164,17 +165,25 @@ const Root: FC = () => {
                 className="text-sm font-semibold leading-6 text-white"
                 to={`/all/${item.name}`}
               >
-                {item.name}
+                {item.name == 'everything' ? 'All' : item.name}
               </Link>
             ))}
           </div>
-          {location.pathname !== "/" && (
+          {location.pathname !== "/"  ? (
             <div className="hidden lg:flex lg:flex-1 lg:justify-end">
               <Link
                 to="/"
                 className="text-sm font-semibold leading-6 text-white"
               >
                 Home <span aria-hidden="true">&rarr;</span>
+              </Link>
+            </div>) : (
+            <div className="hidden lg:flex lg:flex-1 lg:justify-end cursor-pointer">
+              <Link
+                to="/all/everything"
+                className="text-sm font-semibold leading-6 text-white"
+              >
+                All Articles <span aria-hidden="true">&rarr;</span>
               </Link>
             </div>
           )}
@@ -206,7 +215,7 @@ const Root: FC = () => {
                       key={item.name}
                       className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-white hover:bg-gray-800"
                     >
-                      {item.name}
+                      {item.name == 'everything' ? 'All' : item.name}
                     </Link>
                   ))}
                 </div>

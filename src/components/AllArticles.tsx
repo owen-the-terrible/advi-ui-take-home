@@ -166,7 +166,7 @@ const AllArticles: FC = () => {
     <div className="mx-auto mt-4 max-w-7xl px-6 sm:mt-10 lg:px-8">
       <div className="mx-auto max-w-2xl lg:mx-0">
         <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
-          {data}
+          { data == 'everything' ? 'All Articles' : data }
         </h2>
         <div className="mt-6 text-lg leading-8 text-gray-300">
           <Pagination
