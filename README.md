@@ -5,7 +5,7 @@ https://advi-ui-take-home-git-development-owen-the-terrible.vercel.app/
 For times sake, Id like to get this to you and ask you to proceed to run it locally.
 
 ## Process
-If you have a process for cloning a repository, go ahead and do what is most faliar to you, if Not here are step by step instructions
+If you have a process for cloning a repository, go ahead and do what is most familiar to you, if Not here are step by step instructions
 
     1.Open your web browser and go to the GitHub repository: https://github.com/owen-the-terrible/advi-ui-take-home 
      2.Click the "Code" button and copy the repository URL from the dropdown menu, next open a terminal on your computer.
