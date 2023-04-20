@@ -208,7 +208,7 @@ const AllArticles: FC = () => {
             </ul>
           </div>
           {selectedItemName === "Date" ? (
-            <div className="mx-auto max-w-3xl lg:mx-0 flex justify-center mt-8">
+            <div className="mx-auto max-w-3xl lg:mx-0 flex justify-center mt-8 max-sm:flex-col items-center">
               <DatePicker
                 onChange={startDateChangeHandler}
                 startDate={startDate}
@@ -231,7 +231,7 @@ const AllArticles: FC = () => {
               </button>
             </div>
           ) : selectedItemName !== "" ? (
-            <div className="mx-auto max-w-3xl lg:mx-0 flex justify-evenly mt-8">
+            <div className="mx-auto max-w-3xl lg:mx-0 flex justify-evenly mt-8 max-sm:flex-col ">
               <input
                 type="text"
                 className="bg-indigo-50  rounded text-indigo-600 md:w-[400px]"
